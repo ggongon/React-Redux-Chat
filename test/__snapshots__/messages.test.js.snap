@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render correctly 1`] = `
+<div>
+  <ul>
+    <li>
+      <div
+        className="message"
+      >
+        ayyyyy
+      </div>
+      <div
+        className="user"
+      >
+        Ryan
+      </div>
+    </li>
+    <li>
+      <div
+        className="message"
+      >
+        lmao
+      </div>
+      <div
+        className="user"
+      >
+        Nick
+      </div>
+    </li>
+  </ul>
+</div>
+`;

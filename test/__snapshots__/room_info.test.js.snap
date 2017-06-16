@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render properly 1`] = `
+<div
+  className="roomInfo"
+>
+  <h2>
+    Tea Chats
+  </h2>
+  <h5>
+    Ryan, Nick
+  </h5>
+</div>
+`;

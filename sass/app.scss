@@ -1,0 +1,55 @@
+@import "global";
+/*** login window ***/
+#loginContainer {
+	position:absolute;
+	width: 100%;
+	height: 100%;
+}
+.loginContent {
+	width: 350px;
+	height: 350px;
+	border: 5px solid gray;
+	background-color: lighten(gray, 30%);
+
+	input, button {
+		width: 90%;
+		padding: 10px;
+	}
+
+	input + input, button {
+		margin-top: 10px;
+	}
+}
+
+#app {
+  position:absolute;
+  width: 100%;
+  height: 100%;
+}
+
+#left {
+  flex-grow:1;
+	background: #330000;
+
+	/* rooms */
+	ul, li {
+		margin:0;
+		padding:0;
+	}
+	li {
+
+		padding:10px;
+
+		color:white;
+		cursor: pointer;
+
+		&:hover {
+			background: lighten(#300, 10%);
+		}
+	}
+}
+
+#right {
+  flex-grow: 5;
+  border: 1px solid green;
+}
