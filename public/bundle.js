@@ -13876,16 +13876,36 @@ var AddMessage = function (_React$Component) {
   function AddMessage(props) {
     _classCallCheck(this, AddMessage);
 
-    return _possibleConstructorReturn(this, (AddMessage.__proto__ || Object.getPrototypeOf(AddMessage)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (AddMessage.__proto__ || Object.getPrototypeOf(AddMessage)).call(this, props));
+
+    _this.state = {
+      messageText: ""
+    };
+    return _this;
   }
 
   _createClass(AddMessage, [{
-    key: 'render',
+    key: "onKeyup",
+    value: function onKeyup(e) {
+
+      //this.setState({messageText: this.state.messageText + e.target.value});
+    }
+  }, {
+    key: "render",
     value: function render() {
       return _react2.default.createElement(
-        'div',
-        null,
-        'MyComponent'
+        "footer",
+        { className: "footer" },
+        _react2.default.createElement(
+          "form",
+          null,
+          _react2.default.createElement("input", { type: "text", placeholder: "Type a message and hit enter...", value: this.state.messageText, onKeyUp: this.onKeyup.bind(this) }),
+          _react2.default.createElement(
+            "button",
+            { type: "submit" },
+            "Add"
+          )
+        )
       );
     }
   }]);
@@ -13984,7 +14004,7 @@ var Messages = exports.Messages = function (_React$Component) {
 
       return _react2.default.createElement(
         'div',
-        null,
+        { id: 'messages', className: 'stretchy' },
         _react2.default.createElement(
           'ul',
           null,
@@ -14063,7 +14083,7 @@ var Room = exports.Room = function (_React$Component) {
     value: function render() {
       return _react2.default.createElement(
         'div',
-        null,
+        { className: 'flex col' },
         _react2.default.createElement(_room_info2.default, { currentRoom: this.props.currentRoom }),
         _react2.default.createElement(_messages2.default, null),
         _react2.default.createElement(_add_message2.default, null)
@@ -14119,7 +14139,7 @@ var RoomInfo = function RoomInfo(_ref) {
   var users = currentRoom.users.join(", ");
   return _react2.default.createElement(
     "div",
-    { className: "roomInfo" },
+    { className: "roomInfo center" },
     _react2.default.createElement(
       "h2",
       null,
@@ -31219,17 +31239,6 @@ _reactDom2.default.render(_react2.default.createElement(
 		_react2.default.createElement(
 			'div',
 			null,
-			_react2.default.createElement(
-				_reactRouterDom.Link,
-				{ to: '/' },
-				'Login'
-			),
-			' | ',
-			_react2.default.createElement(
-				_reactRouterDom.Link,
-				{ to: '/chat' },
-				'Chat'
-			),
 			_react2.default.createElement(
 				_reactRouterDom.Switch,
 				null,

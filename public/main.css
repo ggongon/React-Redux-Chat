@@ -1,5 +1,7 @@
 * {
-  box-sizing: border-box; }
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0; }
 
 html {
   font-family: Helvetica, Arial, sans-serif;
@@ -13,7 +15,9 @@ body {
   height: 100%; }
 
 .flex {
-  display: flex; }
+  display: flex;
+  height: 100%;
+  width: 100%; }
   .flex.row {
     flex-direction: row; }
   .flex.col {
@@ -21,6 +25,9 @@ body {
   .flex.absCenter {
     justify-content: center;
     align-items: center; }
+
+.stretchy {
+  flex: 1; }
 
 /*** login window ***/
 #loginContainer {
@@ -38,6 +45,9 @@ body {
     padding: 10px; }
   .loginContent input + input, .loginContent button {
     margin-top: 10px; }
+
+.center {
+  text-align: center; }
 
 #app {
   position: absolute;
@@ -59,7 +69,24 @@ body {
       background: #660000; }
 
 #right {
-  flex-grow: 5;
-  border: 1px solid green; }
+  flex-grow: 5; }
+
+.roomInfo {
+  padding: 20px;
+  background: dimgray; }
+
+#messages {
+  margin-left: 10px; }
+  #messages li {
+    margin-bottom: 10px; }
+  #messages .message {
+    padding: 10px;
+    background: lightblue;
+    display: inline-block;
+    border-radius: 20px;
+    max-width: 40%; }
+
+footer {
+  bottom: 0; }
 
 /*# sourceMappingURL=main.css.map*/

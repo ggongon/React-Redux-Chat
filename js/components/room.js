@@ -13,7 +13,7 @@ export class Room extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="flex col">
         <RoomInfo currentRoom={this.props.currentRoom}/>
         <Messages />
         <AddMessage />

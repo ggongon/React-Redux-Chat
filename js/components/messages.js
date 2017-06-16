@@ -32,7 +32,7 @@ export class Messages extends React.Component {
     if (!this.props.messages.length) return <div>No messages.</div>
 
     return (
-      <div>
+      <div id="messages" className="stretchy">
         <ul>
           {this.renderMessages()}
         </ul>

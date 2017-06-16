@@ -2,7 +2,7 @@
 
 exports[`should render properly 1`] = `
 <div
-  className="roomInfo"
+  className="roomInfo center"
 >
   <h2>
     Tea Chats

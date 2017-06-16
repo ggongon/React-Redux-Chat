@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
-import {BrowserRouter, Link, Route, Switch} from 'react-router-dom';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
 
 import ReduxPromise from 'redux-promise';
 
@@ -20,8 +20,7 @@ ReactDOM.render(
 	<Provider store={store}>
 		<BrowserRouter>
 			<div>
-				<Link to="/">Login</Link> | <Link to="/chat">Chat</Link>
-
+				
 				<Switch>
 					<Route exact path="/" component={Login} />
 					<Route path="/chat" component={requireAuth(Chat)} />
