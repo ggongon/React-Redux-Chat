@@ -78,5 +78,13 @@
 }
 
 footer {
-	bottom:0
+	padding:10px;
+	form {
+		> * {
+			padding:10px;
+		}
+		input {
+			margin-right:10px;
+		}
+	}
 }

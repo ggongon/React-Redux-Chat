@@ -13881,14 +13881,14 @@ var AddMessage = function (_React$Component) {
     _this.state = {
       messageText: ""
     };
+    _this.onChange = _this.onChange.bind(_this);
     return _this;
   }
 
   _createClass(AddMessage, [{
-    key: "onKeyup",
-    value: function onKeyup(e) {
-
-      //this.setState({messageText: this.state.messageText + e.target.value});
+    key: "onChange",
+    value: function onChange(e) {
+      this.setState({ messageText: e.target.value });
     }
   }, {
     key: "render",
@@ -13898,8 +13898,8 @@ var AddMessage = function (_React$Component) {
         { className: "footer" },
         _react2.default.createElement(
           "form",
-          null,
-          _react2.default.createElement("input", { type: "text", placeholder: "Type a message and hit enter...", value: this.state.messageText, onKeyUp: this.onKeyup.bind(this) }),
+          { className: "flex row" },
+          _react2.default.createElement("input", { className: "stretchy", type: "text", placeholder: "Type a message and hit enter...", value: this.state.messageText, onChange: this.onChange }),
           _react2.default.createElement(
             "button",
             { type: "submit" },

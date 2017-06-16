@@ -6,20 +6,19 @@ export default class AddMessage extends React.Component {
     this.state = {
       messageText: ""
     }
+    this.onChange = this.onChange.bind(this);
   }
 
-  onKeyup(e) {
-
-    //this.setState({messageText: this.state.messageText + e.target.value});
+  onChange(e) {
+    this.setState({messageText: e.target.value});
   }
   render() {
     return (
       <footer className="footer">
-        <form>
-          <input type="text" placeholder="Type a message and hit enter..." value={this.state.messageText} onKeyUp={this.onKeyup.bind(this)} />
+        <form className="flex row">
+          <input className="stretchy" type="text" placeholder="Type a message and hit enter..." value={this.state.messageText} onChange={this.onChange} />
           <button type="submit">Add</button>
         </form>
-
       </footer>
     );
   }

@@ -20,7 +20,6 @@ ReactDOM.render(
 	<Provider store={store}>
 		<BrowserRouter>
 			<div>
-				
 				<Switch>
 					<Route exact path="/" component={Login} />
 					<Route path="/chat" component={requireAuth(Chat)} />

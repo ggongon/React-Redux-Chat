@@ -87,6 +87,10 @@ body {
     max-width: 40%; }
 
 footer {
-  bottom: 0; }
+  padding: 10px; }
+  footer form > * {
+    padding: 10px; }
+  footer form input {
+    margin-right: 10px; }
 
 /*# sourceMappingURL=main.css.map*/
