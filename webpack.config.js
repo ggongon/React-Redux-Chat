@@ -6,7 +6,7 @@ module.exports = {
 	entry: './js/index.js',
 	output: {
 		path: './public',
-		filename: 'dd.js',
+		filename: 'bundle.js',
 		publicPath: '/' },
 
 	//ignore extensions for imported files
