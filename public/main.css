@@ -58,7 +58,7 @@ body {
   height: 100%; }
 
 #left {
-  flex-grow: 1;
+  width: 150px;
   background: #330000;
   /* rooms */ }
   #left ul, #left li {
@@ -72,14 +72,18 @@ body {
       background: #660000; }
 
 #right {
-  flex-grow: 5; }
+  flex-grow: 1; }
 
 .roomInfo {
   padding: 20px;
-  background: dimgray; }
+  background: dimgray;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+  z-index: 3;
+  color: white; }
 
 #messages {
   padding-left: 10px;
+  padding-top: 10px;
   background: #EFF1F2;
   overflow-y: auto; }
   #messages li {
@@ -89,11 +93,14 @@ body {
     background: lightblue;
     display: inline-block;
     border-radius: 20px;
-    max-width: 55%; }
+    max-width: 55%;
+    padding: 12px 20px; }
 
 footer {
   padding: 10px;
-  background: #EFF1F2; }
+  background: #EFF1F2;
+  box-shadow: 0 -5px 5px rgba(0, 0, 0, 0.1);
+  z-index: 4; }
   footer form > * {
     padding: 10px; }
   footer form input {
