@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render a section where we can add our own Messages 1`] = `
+<footer
+  className="footer"
+>
+  <form
+    className="flex row"
+    onSubmit={[Function]}
+  >
+    <input
+      className="stretchy"
+      onChange={[Function]}
+      onKeyPress={[Function]}
+      placeholder="Type a message and hit enter..."
+      type="text"
+      value=""
+    />
+    <button
+      className="submit"
+      type="submit"
+    >
+      Add
+    </button>
+  </form>
+</footer>
+`;

@@ -3301,6 +3301,7 @@ var FETCH_ROOMS = exports.FETCH_ROOMS = "fetch_rooms";
 var FETCH_ROOM = exports.FETCH_ROOM = "fetch_room";
 var FETCH_MESSAGES = exports.FETCH_MESSAGES = "fetch_messages";
 var UPDATE_ROOM_ID = exports.UPDATE_ROOM_ID = "update_room_id";
+var POST_MESSAGE = exports.POST_MESSAGE = "post_message";
 
 /***/ }),
 /* 26 */
@@ -5281,6 +5282,7 @@ exports.setCurrentRoomId = setCurrentRoomId;
 exports.fetchRooms = fetchRooms;
 exports.fetchRoom = fetchRoom;
 exports.fetchMessages = fetchMessages;
+exports.addMessage = addMessage;
 
 var _types = __webpack_require__(25);
 
@@ -5300,7 +5302,7 @@ function authenticate(username) {
 }
 
 function setCurrentRoomId(roomId) {
-  console.log("setting current room id to ", roomId);
+  // console.log("setting current room id to ", roomId);
   return {
     type: _types.UPDATE_ROOM_ID,
     payload: roomId
@@ -5316,7 +5318,6 @@ function fetchRooms() {
 }
 
 function fetchRoom(roomId) {
-  console.log("fetching room data for roomId=", roomId);
   var request = _axios2.default.get(BASEURL + '/rooms/' + roomId);
   return {
     type: _types.FETCH_ROOM,
@@ -5329,6 +5330,26 @@ function fetchMessages(roomId) {
   return {
     type: _types.FETCH_MESSAGES,
     payload: request
+  };
+}
+
+function addMessage(roomId, _ref) {
+  var name = _ref.name,
+      message = _ref.message;
+
+  return function (dispatch) {
+    //<-- this is allowed via reduxThunk middleware
+    // post the message to the server
+    _axios2.default.post(BASEURL + '/rooms/' + roomId + '/messages', { name: name, message: message }).then(function (response) {
+      // chain a call to the fetchMessages ActionCreator again
+      dispatch(fetchMessages(roomId));
+      // chain a call to fet room data so the current user is added to the list
+      dispatch(fetchRoom(roomId));
+    }).catch(function (error) {
+      // if bad, then just catch it and throw an error, maybe.  For now
+      // let's just swallow any errors
+
+    });
   };
 }
 
@@ -13860,77 +13881,7 @@ module.exports = function spread(callback) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(4);
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var AddMessage = function (_React$Component) {
-  _inherits(AddMessage, _React$Component);
-
-  function AddMessage(props) {
-    _classCallCheck(this, AddMessage);
-
-    var _this = _possibleConstructorReturn(this, (AddMessage.__proto__ || Object.getPrototypeOf(AddMessage)).call(this, props));
-
-    _this.state = {
-      messageText: ""
-    };
-    _this.onChange = _this.onChange.bind(_this);
-    return _this;
-  }
-
-  _createClass(AddMessage, [{
-    key: "onChange",
-    value: function onChange(e) {
-      this.setState({ messageText: e.target.value });
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      return _react2.default.createElement(
-        "footer",
-        { className: "footer" },
-        _react2.default.createElement(
-          "form",
-          { className: "flex row" },
-          _react2.default.createElement("input", { className: "stretchy", type: "text", placeholder: "Type a message and hit enter...", value: this.state.messageText, onChange: this.onChange }),
-          _react2.default.createElement(
-            "button",
-            { type: "submit" },
-            "Add"
-          )
-        )
-      );
-    }
-  }]);
-
-  return AddMessage;
-}(_react2.default.Component);
-
-exports.default = AddMessage;
-
-/***/ }),
-/* 148 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Messages = undefined;
+exports.AddMessage = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -13954,6 +13905,110 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var AddMessage = exports.AddMessage = function (_React$Component) {
+  _inherits(AddMessage, _React$Component);
+
+  function AddMessage(props) {
+    _classCallCheck(this, AddMessage);
+
+    var _this = _possibleConstructorReturn(this, (AddMessage.__proto__ || Object.getPrototypeOf(AddMessage)).call(this, props));
+
+    _this.state = {
+      messageText: ""
+    };
+    _this.onChange = _this.onChange.bind(_this);
+    return _this;
+  }
+
+  _createClass(AddMessage, [{
+    key: 'onKeyPress',
+    value: function onKeyPress(e) {
+      if (e.key === "Enter") {
+        this.onSubmit(e);
+      }
+    }
+  }, {
+    key: 'onChange',
+    value: function onChange(e) {
+      this.setState({ messageText: e.target.value });
+    }
+  }, {
+    key: 'onSubmit',
+    value: function onSubmit(e) {
+      e.preventDefault();
+      this.props.spy && this.props.spy();
+      this.props.addMessage(this.props.currentRoomId, {
+        name: this.props.username,
+        message: this.state.messageText
+      });
+      this.setState({ messageText: '' });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'footer',
+        { className: 'footer' },
+        _react2.default.createElement(
+          'form',
+          { className: 'flex row', onSubmit: this.onSubmit.bind(this) },
+          _react2.default.createElement('input', { className: 'stretchy', type: 'text',
+            placeholder: 'Type a message and hit enter...',
+            value: this.state.messageText,
+            onChange: this.onChange,
+            onKeyPress: this.onKeyPress.bind(this)
+          }),
+          _react2.default.createElement(
+            'button',
+            { className: 'submit', type: 'submit' },
+            'Add'
+          )
+        )
+      );
+    }
+  }]);
+
+  return AddMessage;
+}(_react2.default.Component);
+
+var mapStateToProps = function mapStateToProps(_ref) {
+  var currentRoomId = _ref.currentRoomId,
+      username = _ref.username;
+
+  return { currentRoomId: currentRoomId, username: username };
+};
+exports.default = (0, _reactRedux.connect)(mapStateToProps, actions)(AddMessage);
+
+/***/ }),
+/* 148 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Messages = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(4);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(21);
+
+var _actions = __webpack_require__(41);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var Messages = exports.Messages = function (_Component) {
   _inherits(Messages, _Component);
 
@@ -13967,14 +14022,14 @@ var Messages = exports.Messages = function (_Component) {
     key: 'componentWillMount',
     value: function componentWillMount() {
       if (this.props.currentRoomId === null) {
-        console.log("cwm:", this.props.currentRoomId);
+        // console.log("cwm:", this.props.currentRoomId)
         this.props.fetchMessages(this.props.currentRoomId);
       }
     }
   }, {
     key: 'componentWillUpdate',
     value: function componentWillUpdate(nextProps) {
-      console.log("cwu:", nextProps.currentRoomId);
+      // console.log("cwu:", nextProps.currentRoomId)
       if (nextProps.currentRoomId !== this.props.currentRoomId) {
         this.props.fetchMessages(nextProps.currentRoomId);
       }
@@ -13982,18 +14037,20 @@ var Messages = exports.Messages = function (_Component) {
   }, {
     key: 'renderMessages',
     value: function renderMessages() {
-      if (!this.props.messages) return;
+      var _this2 = this;
 
+      if (!this.props.messages) return;
+      console.log(this.props);
       return this.props.messages.map(function (message, index) {
         return _react2.default.createElement(
           'li',
-          { key: index },
+          { key: index, className: _this2.props.username === message.name ? "txtR" : "" },
           _react2.default.createElement(
             'div',
             { className: 'message' },
             message.message
           ),
-          _react2.default.createElement(
+          message.name !== _this2.props.username && _react2.default.createElement(
             'div',
             { className: 'user' },
             message.name
@@ -14004,7 +14061,7 @@ var Messages = exports.Messages = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      console.log(this.props.currentRoomId, this.props.messages);
+      // console.log(this.props.currentRoomId, this.props.messages)
       if (!this.props.messages.length) return _react2.default.createElement(
         'div',
         { className: 'stretchy' },
@@ -14027,15 +14084,16 @@ var Messages = exports.Messages = function (_Component) {
 }(_react.Component);
 
 var mapStateToProps = function mapStateToProps(_ref) {
-  var currentRoomId = _ref.currentRoomId,
+  var username = _ref.username,
+      currentRoomId = _ref.currentRoomId,
       messages = _ref.messages;
 
   return {
-    currentRoomId: currentRoomId, messages: messages
+    username: username, currentRoomId: currentRoomId, messages: messages
   };
 };
 
-exports.default = (0, _reactRedux.connect)(mapStateToProps, actions)(Messages);
+exports.default = (0, _reactRedux.connect)(mapStateToProps, { fetchMessages: _actions.fetchMessages })(Messages);
 
 /***/ }),
 /* 149 */
@@ -14379,6 +14437,7 @@ exports.default = function () {
 
   switch (action.type) {
     case _types.FETCH_MESSAGES:
+      console.log("called fetch messages reducer", action.payload.data);
       return action.payload.data;
   }
   return state;
@@ -31243,6 +31302,10 @@ var _reduxPromise = __webpack_require__(128);
 
 var _reduxPromise2 = _interopRequireDefault(_reduxPromise);
 
+var _reduxThunk = __webpack_require__(321);
+
+var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+
 var _requireAuthentication = __webpack_require__(121);
 
 var _requireAuthentication2 = _interopRequireDefault(_requireAuthentication);
@@ -31265,7 +31328,7 @@ var _app2 = _interopRequireDefault(_app);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var createStoreWithMiddleware = (0, _redux.applyMiddleware)(_reduxPromise2.default)(_redux.createStore);
+var createStoreWithMiddleware = (0, _redux.applyMiddleware)(_reduxPromise2.default, _reduxThunk2.default)(_redux.createStore);
 var store = createStoreWithMiddleware(_reducers2.default);
 
 window.store = store;
@@ -31321,6 +31384,36 @@ exports.default = function () {
 };
 
 var _types = __webpack_require__(25);
+
+/***/ }),
+/* 320 */,
+/* 321 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+function createThunkMiddleware(extraArgument) {
+  return function (_ref) {
+    var dispatch = _ref.dispatch,
+        getState = _ref.getState;
+    return function (next) {
+      return function (action) {
+        if (typeof action === 'function') {
+          return action(dispatch, getState, extraArgument);
+        }
+
+        return next(action);
+      };
+    };
+  };
+}
+
+var thunk = createThunkMiddleware();
+thunk.withExtraArgument = createThunkMiddleware;
+
+exports['default'] = thunk;
 
 /***/ })
 /******/ ]);

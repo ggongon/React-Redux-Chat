@@ -5,6 +5,7 @@ import { createStore, applyMiddleware } from 'redux';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 
 import ReduxPromise from 'redux-promise';
+import ReduxThunk from 'redux-thunk';
 
 import requireAuth from './components/HOC/requireAuthentication';
 import Chat from './components/chat';
@@ -12,7 +13,7 @@ import Login from './components/login';
 import reducers from './reducers';
 import css from '../sass/app';
 
-const createStoreWithMiddleware = applyMiddleware(ReduxPromise)(createStore);
+const createStoreWithMiddleware = applyMiddleware(ReduxPromise,ReduxThunk)(createStore);
 let store = createStoreWithMiddleware(reducers);
 
 window.store=store;

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import * as actions from '../actions'
+import {fetchMessages} from '../actions'
 
 export class Messages extends Component {
   constructor(props) {
@@ -9,13 +9,13 @@ export class Messages extends Component {
 
   componentWillMount () {
     if (this.props.currentRoomId === null) {
-      console.log("cwm:", this.props.currentRoomId)
+      // console.log("cwm:", this.props.currentRoomId)
       this.props.fetchMessages(this.props.currentRoomId);
     }
   }
 
   componentWillUpdate(nextProps) {
-    console.log("cwu:", nextProps.currentRoomId)
+    // console.log("cwu:", nextProps.currentRoomId)
     if (nextProps.currentRoomId !== this.props.currentRoomId) {
       this.props.fetchMessages(nextProps.currentRoomId);
     }
@@ -23,19 +23,19 @@ export class Messages extends Component {
 
   renderMessages() {
     if (!this.props.messages) return;
-
+    console.log(this.props)
     return this.props.messages.map((message, index) => {
       return (
-        <li key={index}>
+        <li key={index} className={(this.props.username === message.name)?"txtR":""}>
           <div className="message">{message.message}</div>
-          <div className="user">{message.name}</div>
+          {message.name!==this.props.username && <div className="user">{message.name}</div>}
         </li>
       )
     })
   }
 
   render() {
-    console.log(this.props.currentRoomId, this.props.messages)
+    // console.log(this.props.currentRoomId, this.props.messages)
     if (!this.props.messages.length) return <div className="stretchy">No messages.</div>
 
     return (
@@ -48,10 +48,10 @@ export class Messages extends Component {
   }
 }
 
-const mapStateToProps = ({currentRoomId, messages}) => {
+const mapStateToProps = ({username, currentRoomId, messages}) => {
   return {
-    currentRoomId, messages
+    username, currentRoomId, messages
   }
 }
 
-export default connect(mapStateToProps, actions)(Messages);
+export default connect(mapStateToProps, {fetchMessages})(Messages);

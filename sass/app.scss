@@ -65,6 +65,7 @@
 #messages {
 	padding-left: 10px;
 	background: #EFF1F2;
+	overflow-y: auto;
 	li {
 		margin-bottom: 10px;
 	}
@@ -74,7 +75,8 @@
 		background: lightblue;
 		display: inline-block;
 		border-radius: 20px;
-		max-width:40%;
+		max-width:55%;
+
 	}
 }
 
