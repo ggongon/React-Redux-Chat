@@ -1,20 +1,17 @@
-import React, {PropTypes} from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
-
 import RoomInfo from './room_info';
 import Messages from './messages';
 import AddMessage from './add_message';
 
-
-export class Room extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
+export class Room extends Component {
   render() {
+    if (this.props.currentRoomId === null) {
+      return <div className="flex stretchy absCenter">Choose a room.</div>
+    }
     return (
-      <div className="flex col">
-        <RoomInfo currentRoom={this.props.currentRoom}/>
+      <div ref="room" className="flex col">
+        <RoomInfo />
         <Messages />
         <AddMessage />
       </div>
@@ -22,7 +19,8 @@ export class Room extends React.Component {
   }
 }
 
-function mapStateToProps({currentRoom}) {
-  return {currentRoom}
+const mapStateToProps = ({currentRoomId}) => {
+  return {currentRoomId}
 }
+
 export default connect(mapStateToProps)(Room);

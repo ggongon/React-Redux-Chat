@@ -11,20 +11,15 @@ exports[`should render a component 1`] = `
   >
     <input
       name="login"
-      placeholder="Login"
+      placeholder="Username"
       type="text"
-    />
-    <input
-      name="password"
-      placeholder="Password"
-      type="password"
     />
     <button
       name="submit"
       onClick={[Function]}
       type="submit"
     >
-      Log in
+      Chat now!
     </button>
   </form>
 </div>

@@ -1,14 +1,14 @@
 import {
-  FETCH_ROOM, UPDATE_ROOM_ID
+  FETCH_ROOM
 } from '../actions/types';
 
 export default function(state={}, action) {
 
   switch(action.type) {
     case FETCH_ROOM:
+      console.log("fetch_room, action:", action.payload)
+
       return action.payload.data;
-    case UPDATE_ROOM_ID:
-      return action.payload
   }
 
   return state;

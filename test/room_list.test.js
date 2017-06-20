@@ -19,7 +19,8 @@ beforeEach(() => {
   props = {
     fetchRooms: () => rooms,
     setCurrentRoomId: () => { /* sets the current room id */ },
-    fetchRoom: () => { return { /* currentRoomData */ } }
+    fetchRoom: () => { /* fetch current room data via Redux */ },
+    fetchMessages: () => { /* fetch messages from Redux */}
   }
 });
 

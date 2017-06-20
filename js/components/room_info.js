@@ -1,5 +1,5 @@
-import React, {PropTypes} from 'react';
-
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 /**
  * sample response:
  * const currentRoom =  {
@@ -9,21 +9,27 @@ import React, {PropTypes} from 'react';
    }
  */
 
-const RoomInfo = ({currentRoom}) => {
+export class RoomInfo extends Component {
+  constructor(props) {
+    super(props);
+  }
 
-  if (!Object.keys(currentRoom).length) return <div>get a room</div>
-  let users = currentRoom.users.join(", ");
-  return (
-    <div className="roomInfo center">
-      <h2>{currentRoom.name}</h2>
-      <h5>{users}</h5>
-    </div>
-  );
+  render() {
+    let currentRoom = this.props.currentRoom;
+
+    if (!Object.keys(currentRoom).length) return <div>get a room</div>
+    let users = currentRoom.users.join(", ");
+    return (
+      <div className="roomInfo center">
+        <h2>{currentRoom.name}</h2>
+        <h5>{users}</h5>
+      </div>
+    );
+  }
 }
 
-// RoomInfo.propTypes = {
-//   currentRoom: PropTypes.object,
-// }
+const mapStateToProps = ({currentRoom}) => {
+  return {currentRoom}
+};
 
-
-export default RoomInfo;
+export default connect(mapStateToProps)(RoomInfo);

@@ -76,7 +76,8 @@ body {
   background: dimgray; }
 
 #messages {
-  margin-left: 10px; }
+  padding-left: 10px;
+  background: #EFF1F2; }
   #messages li {
     margin-bottom: 10px; }
   #messages .message {
@@ -87,7 +88,8 @@ body {
     max-width: 40%; }
 
 footer {
-  padding: 10px; }
+  padding: 10px;
+  background: #EFF1F2; }
   footer form > * {
     padding: 10px; }
   footer form input {

@@ -1,8 +1,8 @@
-import React, {PropTypes} from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import * as actions from '../actions';
 
-export class RoomList extends React.Component {
+export class RoomList extends Component {
 
   constructor(props) {
     super(props);
@@ -16,9 +16,11 @@ export class RoomList extends React.Component {
 
   onRoomClicked(roomId) {
     this.props.spy && this.props.spy();
+    console.log(roomId, this.props.currentRoomId, roomId !== this.props.currentRoomId)
     if (roomId !== this.props.currentRoomId) {
       this.props.setCurrentRoomId(roomId);
       this.props.fetchRoom(roomId);
+      this.props.fetchMessages(roomId);
     }
   }
 
@@ -44,10 +46,6 @@ export class RoomList extends React.Component {
     )
   }
 }
-
-// RoomList.PropTypes = {
-//   rooms: PropTypes.array,
-// }
 
 function mapStateToProps({rooms, currentRoomId}) {
   return { rooms, currentRoomId }

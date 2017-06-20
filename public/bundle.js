@@ -5291,14 +5291,16 @@ var _axios2 = _interopRequireDefault(_axios);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var BASEURL = "http://localhost:8080/api";
-function authenticate(isLoggedIn) {
+
+function authenticate(username) {
   return {
     type: _types.CHANGE_AUTH,
-    payload: isLoggedIn
+    payload: username
   };
 }
 
 function setCurrentRoomId(roomId) {
+  console.log("setting current room id to ", roomId);
   return {
     type: _types.UPDATE_ROOM_ID,
     payload: roomId
@@ -5314,6 +5316,7 @@ function fetchRooms() {
 }
 
 function fetchRoom(roomId) {
+  console.log("fetching room data for roomId=", roomId);
   var request = _axios2.default.get(BASEURL + '/rooms/' + roomId);
   return {
     type: _types.FETCH_ROOM,
@@ -12668,14 +12671,14 @@ exports.default = function (WrappedComponent) {
     _createClass(Authentication, [{
       key: 'componentWillMount',
       value: function componentWillMount() {
-        if (!this.props.authenticated) {
+        if (!this.props.username) {
           this.context.router.history.push("/");
         }
       }
     }, {
       key: 'componentWillUpdate',
       value: function componentWillUpdate(nextProps) {
-        if (!nextProps.authenticated) {
+        if (!nextProps.username) {
           this.context.router.history.push("/");
         }
       }
@@ -12694,9 +12697,9 @@ exports.default = function (WrappedComponent) {
   };
 
   function mapStateToProps(_ref) {
-    var authenticated = _ref.authenticated;
+    var username = _ref.username;
 
-    return { authenticated: authenticated };
+    return { username: username };
   }
 
   return (0, _reactRedux.connect)(mapStateToProps)(Authentication);
@@ -12727,8 +12730,7 @@ var _room2 = _interopRequireDefault(_room);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = function () {
-
+exports.default = function (props) {
   return _react2.default.createElement(
     'div',
     { id: 'app', className: 'flex row' },
@@ -12792,8 +12794,8 @@ var Login = exports.Login = function (_Component) {
     key: 'loginUser',
     value: function loginUser(event) {
       event.preventDefault();
-      // update the state.authenticated
-      this.props.authenticate(true);
+      // update the state.username
+      this.props.authenticate(this.refs.login.value);
     }
   }, {
     key: 'test',
@@ -12803,7 +12805,7 @@ var Login = exports.Login = function (_Component) {
   }, {
     key: 'componentWillUpdate',
     value: function componentWillUpdate(nextProps) {
-      if (nextProps.authenticated) {
+      if (nextProps.username) {
         this.context.router.history.push("/chat");
       }
     }
@@ -12816,12 +12818,11 @@ var Login = exports.Login = function (_Component) {
         _react2.default.createElement(
           'form',
           { className: 'loginContent flex absCenter col', onSubmit: this.loginUser.bind(this) },
-          _react2.default.createElement('input', { type: 'text', name: 'login', placeholder: 'Login' }),
-          _react2.default.createElement('input', { type: 'password', name: 'password', placeholder: 'Password' }),
+          _react2.default.createElement('input', { type: 'text', ref: 'login', name: 'login', placeholder: 'Username' }),
           _react2.default.createElement(
             'button',
             { type: 'submit', name: 'submit', onClick: this.test.bind(this) },
-            'Log in'
+            'Chat now!'
           )
         )
       );
@@ -12836,9 +12837,9 @@ Login.contextTypes = {
 };
 
 function mapStateToProps(_ref) {
-  var authenticated = _ref.authenticated;
+  var username = _ref.username;
 
-  return { authenticated: authenticated };
+  return { username: username };
 }
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps, actions)(Login);
@@ -12868,6 +12869,10 @@ var _CurrentRoomReducer = __webpack_require__(153);
 
 var _CurrentRoomReducer2 = _interopRequireDefault(_CurrentRoomReducer);
 
+var _CurrentRoomIdReducer = __webpack_require__(319);
+
+var _CurrentRoomIdReducer2 = _interopRequireDefault(_CurrentRoomIdReducer);
+
 var _MessagesReducer = __webpack_require__(154);
 
 var _MessagesReducer2 = _interopRequireDefault(_MessagesReducer);
@@ -12875,10 +12880,10 @@ var _MessagesReducer2 = _interopRequireDefault(_MessagesReducer);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var rootReducer = (0, _redux.combineReducers)({
-  authenticated: _AuthenticationReducer2.default,
+  username: _AuthenticationReducer2.default,
   rooms: _RoomsReducer2.default,
   currentRoom: _CurrentRoomReducer2.default,
-  currentRoomId: _CurrentRoomReducer2.default,
+  currentRoomId: _CurrentRoomIdReducer2.default,
   messages: _MessagesReducer2.default
 });
 
@@ -13949,8 +13954,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Messages = exports.Messages = function (_React$Component) {
-  _inherits(Messages, _React$Component);
+var Messages = exports.Messages = function (_Component) {
+  _inherits(Messages, _Component);
 
   function Messages(props) {
     _classCallCheck(this, Messages);
@@ -13961,21 +13966,24 @@ var Messages = exports.Messages = function (_React$Component) {
   _createClass(Messages, [{
     key: 'componentWillMount',
     value: function componentWillMount() {
-      if (this.props.currentRoomId) {
+      if (this.props.currentRoomId === null) {
+        console.log("cwm:", this.props.currentRoomId);
         this.props.fetchMessages(this.props.currentRoomId);
       }
     }
   }, {
     key: 'componentWillUpdate',
     value: function componentWillUpdate(nextProps) {
-      if (nextProps.currentRoomId != this.props.currentRoomId) {
-        this.props.fetchMessages(this.props.currentRoomId);
+      console.log("cwu:", nextProps.currentRoomId);
+      if (nextProps.currentRoomId !== this.props.currentRoomId) {
+        this.props.fetchMessages(nextProps.currentRoomId);
       }
     }
   }, {
     key: 'renderMessages',
     value: function renderMessages() {
       if (!this.props.messages) return;
+
       return this.props.messages.map(function (message, index) {
         return _react2.default.createElement(
           'li',
@@ -13996,9 +14004,10 @@ var Messages = exports.Messages = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
+      console.log(this.props.currentRoomId, this.props.messages);
       if (!this.props.messages.length) return _react2.default.createElement(
         'div',
-        null,
+        { className: 'stretchy' },
         'No messages.'
       );
 
@@ -14015,15 +14024,14 @@ var Messages = exports.Messages = function (_React$Component) {
   }]);
 
   return Messages;
-}(_react2.default.Component);
+}(_react.Component);
 
 var mapStateToProps = function mapStateToProps(_ref) {
-  var currentRoom = _ref.currentRoom,
-      currentRoomId = _ref.currentRoomId,
+  var currentRoomId = _ref.currentRoomId,
       messages = _ref.messages;
 
   return {
-    currentRoom: currentRoom, currentRoomId: currentRoomId, messages: messages
+    currentRoomId: currentRoomId, messages: messages
   };
 };
 
@@ -14069,22 +14077,29 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Room = exports.Room = function (_React$Component) {
-  _inherits(Room, _React$Component);
+var Room = exports.Room = function (_Component) {
+  _inherits(Room, _Component);
 
-  function Room(props) {
+  function Room() {
     _classCallCheck(this, Room);
 
-    return _possibleConstructorReturn(this, (Room.__proto__ || Object.getPrototypeOf(Room)).call(this, props));
+    return _possibleConstructorReturn(this, (Room.__proto__ || Object.getPrototypeOf(Room)).apply(this, arguments));
   }
 
   _createClass(Room, [{
     key: 'render',
     value: function render() {
+      if (this.props.currentRoomId === null) {
+        return _react2.default.createElement(
+          'div',
+          { className: 'flex stretchy absCenter' },
+          'Choose a room.'
+        );
+      }
       return _react2.default.createElement(
         'div',
-        { className: 'flex col' },
-        _react2.default.createElement(_room_info2.default, { currentRoom: this.props.currentRoom }),
+        { ref: 'room', className: 'flex col' },
+        _react2.default.createElement(_room_info2.default, null),
         _react2.default.createElement(_messages2.default, null),
         _react2.default.createElement(_add_message2.default, null)
       );
@@ -14092,13 +14107,14 @@ var Room = exports.Room = function (_React$Component) {
   }]);
 
   return Room;
-}(_react2.default.Component);
+}(_react.Component);
 
-function mapStateToProps(_ref) {
-  var currentRoom = _ref.currentRoom;
+var mapStateToProps = function mapStateToProps(_ref) {
+  var currentRoomId = _ref.currentRoomId;
 
-  return { currentRoom: currentRoom };
-}
+  return { currentRoomId: currentRoomId };
+};
+
 exports.default = (0, _reactRedux.connect)(mapStateToProps)(Room);
 
 /***/ }),
@@ -14111,12 +14127,23 @@ exports.default = (0, _reactRedux.connect)(mapStateToProps)(Room);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.RoomInfo = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(4);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRedux = __webpack_require__(21);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 /**
  * sample response:
@@ -14127,38 +14154,53 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
    }
  */
 
-var RoomInfo = function RoomInfo(_ref) {
+var RoomInfo = exports.RoomInfo = function (_Component) {
+  _inherits(RoomInfo, _Component);
+
+  function RoomInfo(props) {
+    _classCallCheck(this, RoomInfo);
+
+    return _possibleConstructorReturn(this, (RoomInfo.__proto__ || Object.getPrototypeOf(RoomInfo)).call(this, props));
+  }
+
+  _createClass(RoomInfo, [{
+    key: 'render',
+    value: function render() {
+      var currentRoom = this.props.currentRoom;
+
+      if (!Object.keys(currentRoom).length) return _react2.default.createElement(
+        'div',
+        null,
+        'get a room'
+      );
+      var users = currentRoom.users.join(", ");
+      return _react2.default.createElement(
+        'div',
+        { className: 'roomInfo center' },
+        _react2.default.createElement(
+          'h2',
+          null,
+          currentRoom.name
+        ),
+        _react2.default.createElement(
+          'h5',
+          null,
+          users
+        )
+      );
+    }
+  }]);
+
+  return RoomInfo;
+}(_react.Component);
+
+var mapStateToProps = function mapStateToProps(_ref) {
   var currentRoom = _ref.currentRoom;
 
-
-  if (!Object.keys(currentRoom).length) return _react2.default.createElement(
-    "div",
-    null,
-    "get a room"
-  );
-  var users = currentRoom.users.join(", ");
-  return _react2.default.createElement(
-    "div",
-    { className: "roomInfo center" },
-    _react2.default.createElement(
-      "h2",
-      null,
-      currentRoom.name
-    ),
-    _react2.default.createElement(
-      "h5",
-      null,
-      users
-    )
-  );
+  return { currentRoom: currentRoom };
 };
 
-// RoomInfo.propTypes = {
-//   currentRoom: PropTypes.object,
-// }
-
-
-exports.default = RoomInfo;
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(RoomInfo);
 
 /***/ }),
 /* 151 */
@@ -14194,8 +14236,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var RoomList = exports.RoomList = function (_React$Component) {
-  _inherits(RoomList, _React$Component);
+var RoomList = exports.RoomList = function (_Component) {
+  _inherits(RoomList, _Component);
 
   function RoomList(props) {
     _classCallCheck(this, RoomList);
@@ -14216,9 +14258,11 @@ var RoomList = exports.RoomList = function (_React$Component) {
     key: 'onRoomClicked',
     value: function onRoomClicked(roomId) {
       this.props.spy && this.props.spy();
+      console.log(roomId, this.props.currentRoomId, roomId !== this.props.currentRoomId);
       if (roomId !== this.props.currentRoomId) {
         this.props.setCurrentRoomId(roomId);
         this.props.fetchRoom(roomId);
+        this.props.fetchMessages(roomId);
       }
     }
   }, {
@@ -14254,11 +14298,7 @@ var RoomList = exports.RoomList = function (_React$Component) {
   }]);
 
   return RoomList;
-}(_react2.default.Component);
-
-// RoomList.PropTypes = {
-//   rooms: PropTypes.array,
-// }
+}(_react.Component);
 
 function mapStateToProps(_ref) {
   var rooms = _ref.rooms,
@@ -14281,9 +14321,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 exports.default = function () {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
   var action = arguments[1];
-
 
   switch (action.type) {
     case _types.CHANGE_AUTH:
@@ -14312,9 +14351,9 @@ exports.default = function () {
 
   switch (action.type) {
     case _types.FETCH_ROOM:
+      console.log("fetch_room, action:", action.payload);
+
       return action.payload.data;
-    case _types.UPDATE_ROOM_ID:
-      return action.payload;
   }
 
   return state;
@@ -31248,6 +31287,40 @@ _reactDom2.default.render(_react2.default.createElement(
 		)
 	)
 ), document.getElementById("root"));
+
+/***/ }),
+/* 311 */,
+/* 312 */,
+/* 313 */,
+/* 314 */,
+/* 315 */,
+/* 316 */,
+/* 317 */,
+/* 318 */,
+/* 319 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+exports.default = function () {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+  var action = arguments[1];
+
+
+  switch (action.type) {
+    case _types.UPDATE_ROOM_ID:
+      return action.payload;
+  }
+
+  return state;
+};
+
+var _types = __webpack_require__(25);
 
 /***/ })
 /******/ ]);

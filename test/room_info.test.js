@@ -1,7 +1,7 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import {shallow} from 'enzyme';
-import RoomInfo from '../js/components/room_info';
+import {RoomInfo} from '../js/components/room_info';
 
 const currentRoom =  {
   name: 'Tea Chats',

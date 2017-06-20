@@ -2,14 +2,16 @@ import {CHANGE_AUTH, FETCH_ROOMS, FETCH_ROOM, FETCH_MESSAGES, UPDATE_ROOM_ID} fr
 import axios from 'axios';
 
 const BASEURL = "http://localhost:8080/api"
-export function authenticate(isLoggedIn) {
+
+export function authenticate(username) {
   return {
     type: CHANGE_AUTH,
-    payload: isLoggedIn
+    payload: username
   }
 }
 
 export function setCurrentRoomId(roomId) {
+  console.log("setting current room id to ", roomId);
   return {
     type: UPDATE_ROOM_ID,
     payload: roomId
@@ -25,6 +27,7 @@ export function fetchRooms() {
 }
 
 export function fetchRoom(roomId) {
+  console.log("fetching room data for roomId=", roomId);
   const request = axios.get(`${BASEURL}/rooms/${roomId}`)
   return {
     type: FETCH_ROOM,
